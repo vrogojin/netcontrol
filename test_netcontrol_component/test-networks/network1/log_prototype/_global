@@ -1,0 +1,5 @@
+Log started on 2016-03-08 13:29:42;
+Warning: Component NetControl: category Bioinformatic is not declared in categories.xml
+Nothing to execute
+Wrote log files to /home/kkazemi/test_netcontrol_component/test-networks/network1/log_prototype
+Log closed on 2016-03-08 13:29:43; user kkazemi

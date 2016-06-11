@@ -1,0 +1,4 @@
+Log started on 2016-03-08 13:28:34;
+Executing vertex_att (CSVJoin)
+Component vertex_att finished with success; READY queue: vertex_att_clean 
+Log closed on 2016-03-08 13:28:36; user kkazemi

@@ -1,0 +1,9 @@
+Log started on 2016-03-08 13:28:32;
+Executing nc_result (NetControl)
+[STDOUT nc_result] 10
+[STDOUT nc_result] 48 nodes, 45 edges, 13 targets, 1506 controllable, at least 5 extra
+[STDOUT nc_result] 9 4
+[STDOUT nc_result] . 9 5
+[STDOUT nc_result] . . . . . .
+Component nc_result finished with success; READY queue: nc_result_split 
+Log closed on 2016-03-08 13:28:36; user kkazemi

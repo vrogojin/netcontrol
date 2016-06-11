@@ -1,0 +1,8 @@
+48 nodes, 45 edges, is directed: TRUE
+--- SEP h43dsznbF2idt2xH ---
+Executing dot -Tps2 "/tmp/RtmpRiPwYq/file3c57da034d8" -o "/tmp/RtmpRiPwYq/file3c5710c6b6d4"
+--- SEP h43dsznbF2idt2xH ---
+Executing ps2pdf "/tmp/RtmpRiPwYq/file3c5710c6b6d4" "/tmp/RtmpRiPwYq/file3c577620b394"
+--- SEP h43dsznbF2idt2xH ---
+Executing cp "/tmp/RtmpRiPwYq/file3c577620b394" "/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/vis_graph/figure/vis_graph-graph.pdf"
+--- SEP h43dsznbF2idt2xH ---

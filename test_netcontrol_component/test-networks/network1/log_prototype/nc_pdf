@@ -1,0 +1,15 @@
+Log started on 2016-03-08 13:28:36;
+Executing nc_pdf (LatexPDF)
+[STDOUT nc_pdf] This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian)
+[STDOUT nc_pdf]  restricted \write18 enabled.
+[STDOUT nc_pdf] entering extended mode
+[STDOUT nc_pdf] This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian)
+[STDOUT nc_pdf]  restricted \write18 enabled.
+[STDOUT nc_pdf] entering extended mode
+[STDOUT nc_pdf] This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian)
+[STDOUT nc_pdf]  restricted \write18 enabled.
+[STDOUT nc_pdf] entering extended mode
+[LOG nc_pdf] Temporary directory for latex: /tmp/Rtmp6BGgI9
+[LOG nc_pdf] Directory contents after latex: document.aux document.log document.pdf document.tex vis_graph-graph.pdf
+Component nc_pdf finished with success; READY queue: OUTPUT1 
+Log closed on 2016-03-08 13:28:36; user kkazemi

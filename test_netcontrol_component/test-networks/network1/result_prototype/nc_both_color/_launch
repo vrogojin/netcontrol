@@ -1,0 +1,3 @@
+#!/usr/bin/env anduril-run-instance
+cd /usr/share/anduril/microarray/components/CSVJoin
+"R" "--slave" "--vanilla" "--args" "/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/nc_both_color/_command"  < /usr/share/anduril/microarray/components/CSVJoin/CSVJoin.r

@@ -1,0 +1,65 @@
+#!/usr/bin/env	anduril-runner
+//$ -b /home/kkazemi/test_netcontrol_component
+
+target_genes = INPUT(path="Target_gene_sample_modified.txt")
+
+drug_targets = INPUT(path="Drug-Target_Approved_Proteins.txt")
+
+case_study = INPUT(path="sample_graph.txt")
+
+heuristics_in = INPUT(path="controllable.txt")
+
+
+//Script that converts csv into text file
+text_sc = INPUT(path="csvtext.sh") 
+
+
+//Filtering the input 19-25
+case_header = CSVCleaner(original=case_study, columnsIn="Source, Target")
+
+fil_case_source = CSVFilter(csv=target_genes, auxiliary=case_header, matchColumn="Source")
+
+fil_case_target = CSVFilter(csv=target_genes, auxiliary=case_header, matchColumn="Target")
+
+fil_case_both = CSVJoin(csv1=fil_case_source,csv2=fil_case_target, useKeys=false)
+
+
+text_file = BashEvaluate(script=text_sc, var1=fil_case_both)
+
+
+//NetControl component
+nc_result = NetControl(graph=case_study, targets=text_file.optOut1, heuristics=heuristics_in, controllable=drug_targets)
+
+//Filtering the output of net.control to make it suitable for creating a graph 39-50
+nc_result_split = TextFileSplitter(file=nc_result.count,
+                 splitRegexp=".*\\bExtra\\b.*")
+                 
+nc_extra = CSVCleaner(original=nc_result_split.array["2"], dropHeader=true)
+
+nc_extra_clean = CSVCleaner(original=nc_extra, rename="Extra=name, Targets=fillcolor")
+nc_extra_color = CSVCleaner(original=nc_extra_clean, replace="fillcolor\n([0-9])\nred")
+
+nc_driver = CSVCleaner(original=nc_result_split.array["1"], rename="Driven=name, Targets=fillcolor")
+nc_driver_color = CSVCleaner(original=nc_driver, replace="fillcolor\n([0-9])\ngreen")
+
+nc_both_color = CSVJoin(csv1=nc_driver_color,csv2=nc_extra_color, useKeys=false)
+
+
+nc_graph = CSV2GraphML(matrix=case_header,
+            type="edgelist")
+
+//Adding color annotation to graph 57-63
+graph_ant = GraphAnnotator(graph=nc_graph)
+
+vertex_att = CSVJoin(csv1=graph_ant.vertexAttributes,csv2=nc_both_color, intersection=false, keyColumnNames="name,name")
+
+vertex_att_clean = CSVCleaner(original=vertex_att, columns="Vertex, name, label, originalID, fillcolor", naSymbol="")
+
+graph_ant_color = GraphAnnotator(graph=graph_ant.graph, vertexAttributes=vertex_att_clean)
+
+
+vis_graph = GraphVisualizer(graph=graph_ant_color.graph)
+
+nc_pdf = LatexPDF(document=vis_graph)
+
+OUTPUT(nc_pdf.document)

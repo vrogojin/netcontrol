@@ -1,0 +1,27 @@
+metadata.instanceName=nc_extra_clean
+metadata.Anduril=Engine 1.2.23
+metadata.componentName=CSVCleaner
+metadata.componentPath=/usr/share/anduril/microarray/components/CSVCleaner
+metadata.ANDURIL_HOME=/usr/share/anduril
+metadata.bundleName=microarray
+metadata.bundlePath=/usr/share/anduril/microarray
+input.original=/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/nc_extra/table.csv
+output._errors=/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/nc_extra_clean/_errors
+output._log=/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/nc_extra_clean/_log
+output._tempdir=/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/nc_extra_clean/_tempdir
+output.table=/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/nc_extra_clean/table.csv
+parameter.autoRename=
+parameter.columns=*
+parameter.columnsIn=
+parameter.delimIn=\\t
+parameter.delimSymbol=\\t
+parameter.dropHeader=false
+parameter.fillRows=false
+parameter.naIn=NA
+parameter.naSymbol=NA
+parameter.numberFormat=
+parameter.rename=Extra\=name, Targets\=fillcolor
+parameter.replace=
+parameter.rowSkip=0
+parameter.skipQuotes=
+parameter.trim=false

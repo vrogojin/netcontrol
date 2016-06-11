@@ -1,0 +1,4 @@
+Log started on 2016-03-08 13:28:34;
+Executing nc_result_split (TextFileSplitter)
+Component nc_result_split finished with success; READY queue: _extract_nc_result_split_array_1 _extract_nc_result_split_array_2 
+Log closed on 2016-03-08 13:28:36; user kkazemi

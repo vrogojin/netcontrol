@@ -1,0 +1,4 @@
+Log started on 2016-03-08 13:27:57;
+Executing case_header (CSVCleaner)
+Component case_header finished with success; READY queue: fil_case_source nc_graph fil_case_target 
+Log closed on 2016-03-08 13:27:57; user kkazemi

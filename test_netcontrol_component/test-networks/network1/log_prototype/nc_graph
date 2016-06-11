@@ -1,0 +1,7 @@
+Log started on 2016-03-08 13:27:57;
+Executing nc_graph (CSV2GraphML)
+[STDERR nc_graph] Warning message:
+[STDERR nc_graph] In max(E(g)$weight, na.rm = TRUE) :
+[STDERR nc_graph]   no non-missing arguments to max; returning -Inf
+Component nc_graph finished with success; READY queue: graph_ant 
+Log closed on 2016-03-08 13:27:57; user kkazemi

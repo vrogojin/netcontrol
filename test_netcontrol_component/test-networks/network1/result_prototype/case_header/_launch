@@ -1,0 +1,3 @@
+#!/usr/bin/env anduril-run-instance
+cd /usr/share/anduril/microarray/components/CSVCleaner
+"java" "-Xmx200m" "-cp" "/usr/share/anduril/anduril.jar:.:/usr/share/anduril/microarray/lib/java:/usr/share/anduril/anduril.jar:." "fi.helsinki.ltdk.csbl.asser.io.CSVCleaner" "/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/case_header/_command" 

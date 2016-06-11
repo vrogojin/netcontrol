@@ -1,0 +1,202 @@
+#!/usr/bin/env anduril-runner
+
+//$ -b /opt/moksiskaan/db/pipeline
+//$ -b /home/kkazemi/test_netcontrol_component
+
+
+// Settings
+
+reexecute="always"
+
+// Init
+
+moksiskaanInit = MoksiskaanInit()
+include moksiskaanPipelines+"/Studies.and"
+
+linkStyles = INPUT(path = moksiskaanBundle+"/functions/CandidateReport/LinkTypeProperties.csv")
+linkFunctions = INPUT(path = moksiskaanBundle+"/functions/CandidateReport/LinkTypeIdFunctions.csv")
+
+linkRules = "Keggonen"
+linkTypes =  //LinkType_pathway_precedence+","+
+            //LinkType_protein_protein_interaction+","+
+            LinkType_protein_activation+","+
+            LinkType_protein_inhibition+","+
+            LinkType_protein_state_change+","+
+            //LinkType_protein_binding+","+
+            //LinkType_protein_dissociation+","+
+            LinkType_gene_expression+","+
+            LinkType_gene_repression+","+
+            LinkType_phosphorylation+","+
+            LinkType_dephosphorylation+","+
+            LinkType_glycosylation+","+
+            LinkType_ubiquitination+","+
+            LinkType_methylation
+
+
+// User input
+organism = Organism_Homo_sapiens
+
+zip_sc=INPUT(path="makezip.sh")
+
+listGenes=INPUT(path=$PWD+"/network")
+listGenes_header = CSVCleaner(original=listGenes, columnsIn="Target Gene")
+
+target_genes = INPUT(path=$PWD+"/target_genes")
+target_genes_header = CSVCleaner(original=target_genes, columnsIn="Target Gene")
+
+
+//INPUT(path=$PWD+"/cancers")
+cancer_cells = std.fRead($PWD+"/cancers")
+if (cancer_cells != "none")
+{
+cancer_file_path = std.concat("cancer_data/", cancer_cells,".csv")
+cancer_file_path_fil = std.strReplace(cancer_file_path, " ", "")
+cell_file = INPUT(path=cancer_file_path_fil)
+cell_file_header = CSVCleaner(original=cell_file, columns="Gene name")
+cell_file_header_pr = CSVCleaner(original=cell_file_header, columnsIn="Target Gene")
+// List of genes to build the network
+target_gene_comb = CSVJoin(csv1=target_genes_header, csv2=cell_file_header_pr, useKeys=false)
+all_genes = CSVJoin(csv1=listGenes_header,csv2=target_gene_comb, useKeys=false)
+}
+else
+{
+target_gene_comb=target_genes_header
+all_genes = CSVJoin(csv1=listGenes_header,csv2=target_genes_header, useKeys=false)
+}
+
+
+//INPUT(path=$PWD+"/gap")
+gap_file = std.fRead($PWD+"/gap")
+gap_file_fil = std.strReplace(gap_file, " ", "")
+gap = std.convert(gap_file_fil, type="int")
+if (gap > 3) {gap = 3}
+if (gap < 1) {gap = 1}
+
+
+//INPUT(path=$PWD+"/drug")
+drugable_file = std.fRead($PWD+"/drug")
+drugable = std.strReplace(drugable_file, " ", "")
+
+// Convert gene names to EnsemblGeneId
+geneConvert=KorvasieniAnnotator(sourceKeys=all_genes,
+                    //connection=Properties,
+                    indicator=true,
+                    inputDB=".GeneName",
+                    inputType="Gene",
+                    targetDB=".GeneId",
+                    unique=true)
+                    
+                    
+EnsemblId=CSVFilter(csv=geneConvert, includeColumns=".GeneId")
+
+FilEnsemblId=SearchReplace(file=EnsemblId,key00=",",value00="\"\n\"")
+
+
+expandType="connected"
+//expandType="both"
+
+// Generating the pathway
+xrefCol=".GeneId"
+
+      
+pathway = CandidatePathway(hits = FilEnsemblId,
+				linkTypes = linkTypes,
+				linkStyles = linkStyles,
+				annotRules = linkRules, 
+				organism = Organism_Homo_sapiens,
+				xrefType = 10,
+				xrefCol = xrefCol,
+				maxGap=gap,
+				expand=expandType,
+				hitProperties="isHit=true,color=#00EE00,penwidth=3",
+				@execute=reexecute
+				)
+				
+annotationPathway = GraphAnnotator(graph = pathway.graph)
+
+vertexLabel=CSVFilter(csv=annotationPathway.vertexAttributes, includeColumns="Vertex, label")
+
+edgeNumbers=CSVFilter(csv=annotationPathway.edgeAttributes, includeColumns="Vertex1, Vertex2")
+
+edgeVertex=CSVJoin(csv1=edgeNumbers,csv2=vertexLabel, keyColumnNames="Vertex1, Vertex")
+edgeVertexRename=CSVCleaner(original=edgeVertex, rename="label=label1")
+edgeVertexClean=CSVJoin(csv1=edgeVertexRename,csv2=vertexLabel, keyColumnNames="Vertex2, Vertex")
+
+network=CSVCleaner(original=edgeVertexClean, columns="label1, label",rename="label1=Source, label=Target")
+
+
+//******Old Pipeline code starts from here*******
+
+// We provide this
+heuristics_in = INPUT(path="controllable.txt")
+
+
+//Filtering the input
+fil_case_source = CSVFilter(csv=target_gene_comb, auxiliary=network, matchColumn="Source")
+
+fil_case_target = CSVFilter(csv=target_gene_comb, auxiliary=network, matchColumn="Target")
+
+fil_case_both = CSVJoin(csv1=fil_case_source,csv2=fil_case_target, useKeys=false)
+
+fil_case_both_no_header = CSVCleaner(original=fil_case_both, dropHeader=true, skipQuotes="*")
+
+network_no_header = CSVCleaner(original=network, dropHeader=true, skipQuotes="*")
+
+
+//NetControl component
+
+// there can be more conditions in running NetControl, change when decided on final specification
+if (drugable == "on") {
+drug_targets = INPUT(path="Drug-Target_Approved_Proteins.txt")
+nc_result = NetControl(graph=network_no_header, targets=fil_case_both_no_header, heuristics=heuristics_in, controllable=drug_targets)
+}
+else {
+nc_result = NetControl(graph=network_no_header, targets=fil_case_both_no_header, heuristics=heuristics_in)
+}
+
+//Filtering the output of net.control to make it suitable for annotating a graph
+nc_result_split = TextFileSplitter(file=nc_result.count,
+                 splitRegexp=".*\\bExtra\\b.*")
+                 
+nc_extra = CSVCleaner(original=nc_result_split.array["2"], dropHeader=true)
+
+nc_extra_clean = CSVCleaner(original=nc_extra, rename="Extra=name, Targets=fillcolor")
+nc_extra_color = CSVCleaner(original=nc_extra_clean, replace="fillcolor\n([0-9])\n#ff0000")
+
+nc_driver = CSVCleaner(original=nc_result_split.array["1"], rename="Driven=name, Targets=fillcolor")
+nc_driver_color = CSVCleaner(original=nc_driver, replace="fillcolor\n([0-9])\n#00ffff")
+
+nc_both_color = CSVJoin(csv1=nc_driver_color,csv2=nc_extra_color, useKeys=false)
+
+//moksiskaan graph
+mok_vertex_att = CSVJoin(csv1=annotationPathway.vertexAttributes,csv2=nc_both_color, intersection=false, keyColumnNames="label,name")
+
+mok_vertex_att_clean = CSVCleaner(original=mok_vertex_att, columns="Vertex, BioentityId, EnsemblGeneId, color, fillcolor, isHit, label, penwidth, originalID", naSymbol="")
+
+mok_graph_ant_color = GraphAnnotator(graph=annotationPathway.graph, vertexAttributes=mok_vertex_att_clean)
+
+mok_vis_graph = GraphVisualizer(graph=mok_graph_ant_color.graph)
+
+// This does not work for now
+/*
+mok_cyto = Pathway2Cytoscape(pathway=mok_graph_ant_color.graph,
+                  //groups=SetList,
+                  edgeCopy="arrowhead,color",
+                  linkAttr="LinkTypeId",
+                  nameAttr="label",
+                  title="MyPathway",
+                  tooltipAttr="",
+                  vertexCopy="BioentityId,EnsemblGeneId,color,isHit,fillcolor",
+                  weightAttr="LinkWeight")
+*/
+
+mok_nc_pdf = LatexPDF(document=mok_vis_graph)
+
+// Creating the result zip file
+cp_zip = BashEvaluate(script=zip_sc,var1=mok_nc_pdf.document, var2=mok_graph_ant_color.graph, 
+			var3=nc_result_split.array["1"], var4=nc_extra, var5=nc_result.detail)
+
+// Copying resulting files to the top of the $workingdir
+cp_output = BashEvaluate(script="cp @var1@.zip ../../result.zip",var1=cp_zip.optOut1)
+
+OUTPUT(cp_zip.optOut1)

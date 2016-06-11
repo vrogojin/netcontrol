@@ -1,0 +1,9 @@
+Log started on 2016-03-08 13:28:35;
+Executing vis_graph (GraphVisualizer)
+[STDERR vis_graph] dot - graphviz version 2.36.0 (20140111.2315)
+[LOG vis_graph] 48 nodes, 45 edges, is directed: TRUE
+[LOG vis_graph] Executing dot -Tps2 "/tmp/RtmpRiPwYq/file3c57da034d8" -o "/tmp/RtmpRiPwYq/file3c5710c6b6d4"
+[LOG vis_graph] Executing ps2pdf "/tmp/RtmpRiPwYq/file3c5710c6b6d4" "/tmp/RtmpRiPwYq/file3c577620b394"
+[LOG vis_graph] Executing cp "/tmp/RtmpRiPwYq/file3c577620b394" "/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/vis_graph/figure/vis_graph-graph.pdf"
+Component vis_graph finished with success; READY queue: nc_pdf 
+Log closed on 2016-03-08 13:28:36; user kkazemi

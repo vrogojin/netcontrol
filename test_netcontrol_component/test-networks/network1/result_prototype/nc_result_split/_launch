@@ -1,0 +1,3 @@
+#!/usr/bin/env anduril-run-instance
+cd /usr/share/anduril/microarray/components/TextFileSplitter
+"java" "-Xmx200m" "-cp" "/usr/share/anduril/anduril.jar:.:/usr/share/anduril/microarray/lib/java:/usr/share/anduril/anduril.jar:." "TextFileSplitter" "/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/nc_result_split/_command" 

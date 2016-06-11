@@ -1,0 +1,16 @@
+metadata.instanceName=nc_graph
+metadata.Anduril=Engine 1.2.23
+metadata.componentName=CSV2GraphML
+metadata.componentPath=/usr/share/anduril/microarray/components/CSV2GraphML
+metadata.ANDURIL_HOME=/usr/share/anduril
+metadata.bundleName=microarray
+metadata.bundlePath=/usr/share/anduril/microarray
+input.matrix=/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/case_header/table.csv
+output._errors=/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/nc_graph/_errors
+output._log=/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/nc_graph/_log
+output._tempdir=/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/nc_graph/_tempdir
+output.graph=/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/nc_graph/graph.xml
+parameter.directed=true
+parameter.edgeWeights=false
+parameter.maxEdgeWidth=5
+parameter.type=edgelist

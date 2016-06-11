@@ -1,0 +1,3 @@
+#!/usr/bin/env anduril-run-instance
+cd /usr/share/anduril/microarray/components/BashEvaluate
+"bash" "/usr/share/anduril/microarray/components/BashEvaluate/evaluate.bash" "/home/kkazemi/test_netcontrol_component/test-networks/network1/result_prototype/text_file/_command" 
