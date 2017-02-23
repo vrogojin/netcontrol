@@ -13,8 +13,8 @@ cat ../../result_page_template_footer.html >> result.html
 echo $SESSION_ID > session_id
 echo $SERVER_DIR > server_dir
 
-ssh -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' webadmin@combio.abo.fi "mkdir -p $SERVER_DIR/" &&
-scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' -r result.html webadmin@combio.abo.fi:$SERVER_DIR
+ssh -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' frontend "mkdir -p $SERVER_DIR/" &&
+scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' -r result.html frontend:$SERVER_DIR
 
 screen -d -m -S "net_control_$SESSION_ID" ../../run_net_control.sh
 #screen -m -S "net_control_$SESSION_ID" ../../run_net_control.sh

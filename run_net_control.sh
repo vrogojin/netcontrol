@@ -18,12 +18,12 @@ mkdir result
 touch result.zip
 touch result.html
 
-../../pipeline_kegg.and
+../../netco4biomed.and
 
 #   anduril run -d $EXEC_DIR -b $MOKSISKAAN_HOME/pipeline -b $ANDURIL_HOME/sequencing -b $ANDURIL_HOME/beta -threads 8 $VR_PIPELINES_HOME/get_data_for_ieee_paper.and $1 $2 $3 $4 $5 $6
 #   tar -czf /home/vrogojin/biomedicum/FBL-paper-exec_$( date '+%Y_%m_%d' ).tar.gz $EXEC_DIR
 
-cp log_pipeline_kegg/_global pipeline.log
+cp log_netco4biomed/_global pipeline.log
 cat ../../result_page_template_header2.html > result.html
 echo "<pre>" >> result.html
 if [ -s res ]
@@ -48,8 +48,8 @@ echo "<li><a href='pipeline.log'>Pipeline LOG</a></li>" >> result.html
 echo "</ul>" >> result.html
 cat ../../result_page_template_footer.html >> result.html
 
-ssh -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' webadmin@combio.abo.fi "mkdir -p $SERVER_DIR/" &&
-scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' -r result result.zip result.html pipeline.log webadmin@combio.abo.fi:$SERVER_DIR
+ssh -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' frontend "mkdir -p $SERVER_DIR/" &&
+scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' -r result result.zip result.html pipeline.log frontend:$SERVER_DIR
 
 emailcommand="'echo \"Results of the analysis for your query are ready for download. Please visit http://combio.abo.fi/web_services/remote_call/net_control/$SESSION_ID/result.html at your convenience\" | mail -s \"NetControl4BioMed: results $SESSION_ID\" $(cat useremail)'"
 emailcommand="ssh -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' webadmin@combio.abo.fi $emailcommand"
