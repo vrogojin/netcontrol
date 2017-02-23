@@ -14,7 +14,7 @@ moksiskaanInit = MoksiskaanInit()
 include moksiskaanPipelines+"/Studies.and"
 
 linkStyles = INPUT(path = moksiskaanBundle+"/functions/CandidateReport/LinkTypeProperties.csv")
-linkFunctions = INPUT(path = moksiskaanBundle+"/functions/CandidateReport/LinkTypeIdFunctions.csv")
+linkFunctions = INPUT(path = moksiskaanBundle+"/functions/CandidateReport/LinkTypeFunctions.csv")
 
 linkRules = "Keggonen"
 linkTypes =  //LinkType_pathway_precedence+","+
