@@ -1,7 +1,7 @@
 #!/usr/bin/env anduril-runner
 
 //$ -b /opt/moksiskaan/db/pipeline
-//$ -b NetCon4BioMed
+//$ -b $ANDURIL_BUNDLES/NetCon4BioMed
 
 
 // Settings
