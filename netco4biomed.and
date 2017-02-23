@@ -1,7 +1,7 @@
 #!/usr/bin/env anduril-runner
 
 //$ -b /opt/moksiskaan/db/pipeline
-//$ -b /home/kkazemi/test_netcontrol_component
+//$ -b NetCon4BioMed
 
 
 // Settings
