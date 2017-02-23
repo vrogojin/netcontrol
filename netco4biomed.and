@@ -22,8 +22,8 @@ linkTypes =  //LinkType_pathway_precedence+","+
             LinkType_protein_activation+","+
             LinkType_protein_inhibition+","+
             LinkType_protein_state_change+","+
-            //LinkType_protein_binding+","+
-            //LinkType_protein_dissociation+","+
+            LinkType_protein_binding+","+
+            LinkType_protein_dissociation+","+
             LinkType_gene_expression+","+
             LinkType_gene_repression+","+
             LinkType_phosphorylation+","+
