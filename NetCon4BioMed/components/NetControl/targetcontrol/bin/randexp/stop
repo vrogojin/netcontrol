@@ -1,0 +1,25 @@
+#!/bin/bash
+
+## Stops running tests from the folder passed as argument.
+## This is achieved by creating a "STOP" file that will signal the
+## running tests to stop.
+
+RUNNING_PATH=$1/RUNNING
+STOP_PATH=$1/STOP
+
+# check that the path is valid
+if [ ! -e $1 ]
+then
+    echo "Path not found: $1"
+    exit 1
+fi
+
+# check if there are tests running
+if [ ! -e $RUNNING_PATH ]
+then
+    echo "There are no tests running: $1"
+    exit 1
+fi
+
+# stop running tests
+touch $STOP_PATH

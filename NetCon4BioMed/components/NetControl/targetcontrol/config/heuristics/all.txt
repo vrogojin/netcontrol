@@ -1,0 +1,15 @@
+## Simple heuristics (no distinction of controllable nodes) -> see 'simple_all.txt' for details.
+F F 1 (->T)
+T F 1 (->T)
+T F 1 (->A)(->T)
+T F 1 (->D)(->CA)(->PA)(->N)(->T)
+T F 1 (->@CA)(->@PA)(->D)(->CA)(->PA)(->N)(->T)
+## Heuristics that account for controllable nodes -> see 'controllable.txt' for details.
+T F 1 (->K)(->A)(->T)
+T F 1 (->#XD.#XC.#XK)(->#XA)(->#X)(->#KD.#KC)
+T F 1 (->#XD.#XC.#XK)(->#XA)(->#X)(->#KD.#KC.#KP)
+T F 1 (->#XD.#XC.#XK)(->#XA)(->#X)(->#KD.#KC.#KP.#KK)
+T F 1 (->#XD.#XC.#XP.#XK)(->#XA)(->#X)(->#KD.#KC)
+T F 1 (->#XD.#XC.#XP.#XK)(->#XA)(->#X)(->#KD.#KC.#KP)
+T F 1 (->#XD.#XC.#XP.#XK)(->#XA)(->#X)(->#KD.#KC.#KP.#KK)
+

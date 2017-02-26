@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+SCRIPT=$TC_PATH/targetcontrol/targets_by_degree.py
+
+python -O -u $SCRIPT $@

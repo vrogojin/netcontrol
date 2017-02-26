@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<component>
+    <name>NetControl</name>
+    <version>0.1</version>
+    <doc>
+        COMPONENT DESCRIPTION HERE
+    </doc>
+    <author email="keivan.kazemi@abo.fi">Keivan Kazemi</author>
+    <category>Bioinformatic</category>
+    <launcher type="python">
+        <argument name="file" value="/targetcontrol/targetcontrol/best_control.py"/>
+    </launcher>
+    
+    <inputs>
+        <input name="graph" type="TextFile">
+            <doc>DESCRIPTION</doc>
+        </input>
+	<input name="targets" type="TextFile">
+            <doc>DESCRIPTION</doc>
+        </input> 
+	<input name="heuristics" type="TextFile">
+            <doc>DESCRIPTION</doc>
+        </input> 
+	<input name="controllable" type="TextFile" optional="true">
+            <doc>DESCRIPTION</doc>
+        </input> 
+    </inputs>
+    <outputs>
+        <output name="count" type="CSV">
+            <doc>DESCRIPTION</doc>
+        </output>
+	<output name="detail" type="TextFile">
+            <doc>DESCRIPTION</doc>
+        </output>
+	<output name="full" type="ZIP">
+            <doc>DESCRIPTION</doc>
+        </output>        
+    </outputs>
+    <parameters>
+    	<parameter name="min" type="boolean" default="true">
+	  <doc>report for min. driven nodes</doc>
+    	</parameter>
+	<parameter name="max" type="boolean" default="true">
+	  <doc>report for max. controlled targets</doc>
+    	</parameter>
+	<parameter name="trials" type="int" default="10">
+	  <doc>Number of execution rounds</doc>
+    	</parameter>
+	<parameter name="convergence" type="int" default="5">
+	  <doc>The number of rounds after which the program stops if no update occurs</doc>
+    	</parameter>
+    </parameters>
+</component>

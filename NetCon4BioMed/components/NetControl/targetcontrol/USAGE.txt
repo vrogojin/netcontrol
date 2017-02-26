@@ -1,0 +1,19 @@
+This package provides several tools for computations related to
+the target control of directed networks. To run the available tools,
+first execute:
+
+./tc_console
+
+This will start a subshell which will make our tools available in the
+$PATH environment variable. Moreover, it will enable you to use the
+$TC_PATH variable, which points to the location of the 'tc_console'
+script on your system. This allows you, for example, to easily refer
+to files included in the package (such as heuristics files).
+
+Available scripts:
+
+target_control
+targets_by_degree
+cumulative_control
+
+Run each of them with the '--help' flag for more information.

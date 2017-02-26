@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# get script path
+SCRIPT=`realpath "$0"`
+TC_PATH=`dirname "$SCRIPT"`
+
+# export TC_PATH to have it available for other scripts
+export TC_PATH
+
+# update $PATH with the folder containing the script
+export PATH="$TC_PATH/bin:$PATH"
+
+# start subshell with updated $PATH
+bash --init-file <(echo "echo You are now inside the TargetControl \
+console. The scripts folder has been added to the PATH environment \
+variable, so you can navigate to where your data is and run the \
+scripts from there. Use \'exit\' to go back to the regular shell once \
+you are done with TargetControl.")

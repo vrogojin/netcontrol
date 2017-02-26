@@ -1,0 +1,8 @@
+## Slow heuristics, see 'simple_slow.txt' for details.
+F F 1 (->T)
+T F 1 (->T)
+## Faster heuristics, see 'simple_fast.txt' for details.
+T F 1 (->A)(->T)
+T F 1 (->D)(->CA)(->PA)(->N)(->T)
+T F 1 (->@CA)(->@PA)(->D)(->CA)(->PA)(->N)(->T)
+

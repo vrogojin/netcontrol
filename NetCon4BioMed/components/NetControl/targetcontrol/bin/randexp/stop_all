@@ -1,0 +1,19 @@
+#!/bin/bash
+
+## Stops running tests from all subfolders of the folder given as
+## argument. Each test starts in a separate process.
+
+# check that input argument is correct
+if [ ! -e $1 ]
+then
+    echo "Path not found: $1"
+fi
+
+# run tests in each subfolder
+for sub in $(ls $1)
+do
+    if [ -d $1/$sub ]
+    then
+        ./stop $1/$sub &
+    fi
+done

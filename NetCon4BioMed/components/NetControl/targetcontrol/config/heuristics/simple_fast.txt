@@ -1,0 +1,16 @@
+## All heuristics in this file include the optimization that trims control paths at already driven nodes.
+##
+## Avoid cycles.
+T F 1 (->A)(->T)
+## Consider the parent nodes in the following order:
+## - already driven nodes
+## - nodes that are on controlled path and do not enclose a cycle on the current path
+## - nodes that have already been considered on other paths, and which do not enclose a cycle on the current path
+## - new nodes (which have not been considered on the current or other paths so far in the algorithm)
+## - all other nodes (basically nodes which enclose cycles)
+T F 1 (->D)(->CA)(->PA)(->N)(->T)
+## Same as the above, but prioritize the following first:
+## - edges that are part of already controlled paths
+## - edges that are part of other paths already considered by the algorithm
+T F 1 (->@CA)(->@PA)(->D)(->CA)(->PA)(->N)(->T)
+

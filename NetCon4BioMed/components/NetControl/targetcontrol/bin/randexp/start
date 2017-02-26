@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# paths built from input argument and default names
+STOP_PATH=$1/STOP
+DB_PATH=$1/results.db
+IN_PATH=$1/config.in
+H_PATH=$1/../config.heu
+LOG_PATH=$1/log
+RUNNING_PATH=$1/RUNNING
+UPDATE_PATH=db_update_query
+
+# check that all needed paths exist
+for path in $1 $IN_PATH $H_PATH $UPDATE_PATH
+do
+    if [ ! -e $path ]
+    then
+        echo "Path not found: $path"
+        exit 1
+    fi
+done
+
+# remove stop file if it exists already
+# else it will prevent the execution of the tests
+if [ -e $STOP_PATH ]
+then
+    rm $STOP_PATH
+fi
+
+# check that the tests are not already running
+if [ -e $RUNNING_PATH ]
+then
+    echo "Tests already running in this folder. Stop current tests first."
+    exit 1
+fi
+
+# create file to mark that the tests are running
+touch $RUNNING_PATH
+
+# run tests until stopped
+python -O -u batch_run.py -a -f --stop-by-file -d $DB_PATH -i $IN_PATH -h $H_PATH >$LOG_PATH
+
+# update database
+sqlite3 $DB_PATH <$UPDATE_PATH
+
+# remove marker file to show that no computation is running in the folder
+rm $RUNNING_PATH

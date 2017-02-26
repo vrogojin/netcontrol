@@ -1,0 +1,27 @@
+# for running #
+
+* pyparsing
+	sudo apt-get install python-pyparsing
+* sympy
+	sudo apt-get install python-sympy
+* matplotlib
+	sudo apt-get install python-matplotlib
+* sqlite3
+	sudo apt-get install sqlite3
+
+# for profiling #
+
+* python-dev
+	sudo apt-get install python-dev
+* pip
+	sudo apt-get install python-pip
+* line_profiler
+	sudo pip install line_profiler
+* memory profiler
+	sudo apt-get install python-memory-profiler
+
+# for editing and viewing db #
+
+* SQLiteBrowser
+	sudo apt-add-repository ppa:linuxgndu/sqlitebrowser
+

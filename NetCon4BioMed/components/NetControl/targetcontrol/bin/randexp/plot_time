@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# paths built from input argument and default names
+DB_PATH=$1/results.db
+IN_PATH=$1/config.in && [ ! -z $2 ] && IN_PATH=$1/$2
+H_PATH=$1/../config.heu
+
+# check that all needed paths exist
+for path in $1 $IN_PATH $H_PATH
+do
+    if [ ! -e $path ]
+    then
+        echo "Path not found: $path"
+        exit 1
+    fi
+done
+
+# run tests until stopped
+python -O -u analyze.py -d $DB_PATH -h $H_PATH -i $IN_PATH -p time

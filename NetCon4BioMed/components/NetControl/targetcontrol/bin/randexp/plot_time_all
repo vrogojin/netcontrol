@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# check that input argument is correct
+if [ ! -e $1 ]
+then
+    echo "Path not found: $1"
+fi
+
+# run tests in each subfolder
+for sub in $(ls $1)
+do
+    if [ -d $1/$sub ]
+    then
+        ./plot_time $1/$sub $2
+    fi
+done

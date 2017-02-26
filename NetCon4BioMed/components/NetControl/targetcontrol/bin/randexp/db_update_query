@@ -1,0 +1,31 @@
+SELECT time(), ' computing best run for each (graph, targets) pair...';
+
+CREATE TEMPORARY TABLE group_runs AS
+SELECT graph_id, targets_id, min(driven) AS driven
+FROM runs GROUP BY graph_id, targets_id;
+
+SELECT time(), ' computing best run for each (graph, targets number) pair...';
+
+CREATE TEMPORARY TABLE group_targets AS
+SELECT group_runs.graph_id AS graph_id, targets.target AS nodes, min(driven) AS driven
+FROM group_runs INNER JOIN targets ON group_runs.targets_id = targets.id
+GROUP BY group_runs.graph_id, targets.target;
+
+SELECT time(), ' computing best results for each graph...';
+
+CREATE TEMPORARY TABLE graphs_new AS
+SELECT graphs.id AS id, 
+       graphs.method AS method, 
+       graphs.nodes AS nodes, 
+       graphs.edges AS edges, 
+       graphs.full_driver AS full_driver,
+       min(coalesce(group_targets.driven, graphs.full_driven), coalesce(graphs.full_driven, group_targets.driven)) AS full_driven
+FROM graphs LEFT JOIN group_targets ON graphs.id = group_targets.graph_id AND graphs.nodes = group_targets.nodes;
+
+SELECT time(), ' updating graphs table...';
+
+DROP TABLE graphs;
+CREATE TABLE graphs AS SELECT * FROM graphs_new;
+
+SELECT time(), ' done';
+

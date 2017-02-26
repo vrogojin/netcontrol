@@ -1,0 +1,5 @@
+## Barabasi algorithm, no optimization.
+F F 1 (->T)
+## Barabasi algorithm, optimized to trim paths already containing a driven node.
+T F 1 (->T)
+

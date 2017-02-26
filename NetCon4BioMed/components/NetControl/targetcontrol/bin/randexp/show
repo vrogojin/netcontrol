@@ -1,0 +1,25 @@
+#!/bin/bash
+
+## Shows the current status of running tests within the folder provided
+## as argument. This is performed by checking the log file and showing
+## its last line.
+
+LOG_PATH=$1/log
+
+# check that a valid argument was passed in
+if [ ! -e $1 ]
+then
+    echo "Path not found: $1"
+    exit 1
+fi
+
+# print folder path
+echo -e "$1:"
+
+# print last line in the log file of the fulder
+if [ -e $LOG_PATH ]
+then
+    echo -e "  $(tail -n 1 $LOG_PATH)"    
+else
+    echo -e "  No log found."
+fi
