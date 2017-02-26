@@ -158,8 +158,8 @@ if (std.exists($PWD+"/graphml", type="file")) {
 
 
       
-//    pathway = CandidatePathway(hits = FilEnsemblId,
-    pathway = CandidatePathway(hits = all_genes,
+    pathway = CandidatePathway(hits = FilEnsemblId,
+//    pathway = CandidatePathway(hits = all_genes,
 				linkTypes = linkTypes,
 				linkStyles = linkStyles,
 				annotRules = linkRules, 
