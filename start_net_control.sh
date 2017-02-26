@@ -16,7 +16,7 @@ echo $SERVER_DIR > server_dir
 ssh -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' frontend "mkdir -p $SERVER_DIR/" &&
 scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' -r result.html frontend:$SERVER_DIR
 
-#screen -d -m -S "net_control_$SESSION_ID" ../../run_net_control.sh
+screen -d -m -S "net_control_$SESSION_ID" ../../run_net_control.sh
 #../../run_net_control.sh
 #screen -m -S "net_control_$SESSION_ID" ../../run_net_control.sh
-../../run_net_control.sh &!
+#../../run_net_control.sh &!
