@@ -155,12 +155,14 @@ if (std.exists($PWD+"/graphml", type="file")) {
     xrefCol=".GeneId"
 
       
-    pathway = CandidatePathway(hits = FilEnsemblId,
+//    pathway = CandidatePathway(hits = FilEnsemblId,
+    pathway = CandidatePathway(hits = all_genes,
 				linkTypes = linkTypes,
 				linkStyles = linkStyles,
 				annotRules = linkRules, 
 				organism = Organism_Homo_sapiens,
-				xrefType = 10,
+//				xrefType = 10,
+				xrefType = 100,
 				xrefCol = xrefCol,
 				maxGap=gap,
 				expand=expandType,
