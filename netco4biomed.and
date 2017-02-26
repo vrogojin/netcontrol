@@ -147,8 +147,8 @@ if (std.exists($PWD+"/graphml", type="file")) {
 
     FilEnsemblId=SearchReplace(file=EnsemblId,key00=",",value00="\"\n\"")*/
 
-    expandType="connected"
-    //expandType="both"
+//    expandType="connected"
+    expandType="both"
 
     // Generating the pathway
     xrefCol=".GeneId"
