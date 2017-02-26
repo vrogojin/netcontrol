@@ -123,7 +123,7 @@ if (std.exists($PWD+"/graphml", type="file")) {
     pathway = INPUT(path=$PWD+"/graphml")
     annotationPathway = GraphAnnotator(graph = pathway)
 } else {
-/*    geneConvert=KorvasieniAnnotator(sourceKeys=all_genes,
+    geneConvert=KorvasieniAnnotator(sourceKeys=all_genes,
                     //connection=Properties,
                     indicator=true,
                     inputDB=".GeneName",
@@ -145,7 +145,7 @@ if (std.exists($PWD+"/graphml", type="file")) {
 	missedGenes=missedGenes+"</pre>"
     }
 
-    FilEnsemblId=SearchReplace(file=EnsemblId,key00=",",value00="\"\n\"")*/
+    FilEnsemblId=SearchReplace(file=EnsemblId,key00=",",value00="\"\n\"")
 
 //    expandType="connected"
     expandType="both"
@@ -154,18 +154,16 @@ if (std.exists($PWD+"/graphml", type="file")) {
     xrefCol=".GeneId"
 
 
-    FilEnsemblId=SearchReplace(file=all_genes,key00="Target Gene",value00=xrefCol)
+//    FilEnsemblId=SearchReplace(file=all_genes,key00="Target Gene",value00=xrefCol)
 
 
       
     pathway = CandidatePathway(hits = FilEnsemblId,
-//    pathway = CandidatePathway(hits = all_genes,
 				linkTypes = linkTypes,
 				linkStyles = linkStyles,
 				annotRules = linkRules, 
 				organism = Organism_Homo_sapiens,
 				xrefType = 10,
-//				xrefType = 100,
 				xrefCol = xrefCol,
 				maxGap=gap,
 				expand=expandType,
