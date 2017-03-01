@@ -211,7 +211,7 @@ drugSize=0
 if(std.exists($PWD+"/drug_targets", type="file")){
     additional_drug_targets_pre=INPUT(path=$PWD+"/drug_targets")
     additional_drug_targets_pre2=SearchReplace(file=additional_drug_targets_pre,key00="\\s",value00="\n")
-    additional_target_genes=CSVCleaner(original=additional_drug_targets_pre2,columnsIn="targets")
+    additional_target_genes=CSVCleaner(original=additional_drug_targets_pre2,columnsIn="targets",trim=true)
     drugSize=std.nRows(additional_target_genes)
 }else{
     additional_target_genes=StringInput(content="targets")
@@ -227,7 +227,7 @@ if (drugable == "on") {
     else{
 	drug_targets_pre2=CSV2IDList(table1=drug_targets_pre)
     }
-    drug_targets=CSVCleaner(original=drug_targets_pre2,dropHeader=true)
+    drug_targets=CSVCleaner(original=drug_targets_pre2,dropHeader=true,skipQuotes="*")
     if (netSize>0){
         nc_result = NetControl(graph=network_no_header, targets=fil_case_both_no_header, heuristics=heuristics_in, controllable=drug_targets)
     }
@@ -235,7 +235,7 @@ if (drugable == "on") {
 else {
     if(drugSize>0){
 	drug_targets_pre2=CSV2IDList(table1=additional_target_genes)
-	drug_targets=CSVCleaner(original=drug_targets_pre2,dropHeader=true)
+	drug_targets=CSVCleaner(original=drug_targets_pre2,dropHeader=true,skipQuotes="*")
 	if (netSize>0){
 	    nc_result = NetControl(graph=network_no_header, targets=fil_case_both_no_header, heuristics=heuristics_in, controllable=drug_targets)
         }
