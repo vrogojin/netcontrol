@@ -139,7 +139,7 @@ if (std.exists($PWD+"/graphml", type="file")) {
     EnsemblId=CSVFilter(csv=geneConvert, includeColumns=".GeneId", nonMissing=1)
 
     missingGenes_pre=CSVFilter(csv=geneConvert, auxiliary=all_genes, idColumn="Target Gene", matchColumn="Target Gene",negate=true)
-    missingGenes=CSVFilter(csv=,missingGenes_preincludeColumns="Target Gene")
+    missingGenes=CSVFilter(csv=missingGenes_pre,includeColumns="Target Gene")
 
     nMissed=std.nRows(missingGenes)
     if(nMissed>0){
