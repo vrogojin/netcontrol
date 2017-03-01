@@ -211,14 +211,15 @@ if(std.exists($PWD+"/drug_targets", type="file")){
     additional_drug_targets_pre=INPUT(path=$PWD+"/drug_targets")
     additional_drug_targets_pre2=SearchReplace(file=additional_drug_targets_pre,key00="\\s",value00="\n")
     additional_target_genes=CSVCleaner(original=additional_drug_targets_pre2)
+    drugsSize=std.nRows(additional_target_genes)
+    if (drugsSize>0) {
+	drugable="on"
+    }
 }else{
     additional_target_genes=StringInput(content="")
 }
 
-drugsSize=std.nRows(additional_target_genes)
-if (drugsSize>0) {
-    drugable="on"
-}
+
 
 if (drugable == "on") {
 drug_targets_pre = INPUT(path="Drug-Target_Approved_Proteins.txt")
