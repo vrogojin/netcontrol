@@ -212,7 +212,7 @@ if(std.exists($PWD+"/drug_targets", type="file")){
     additional_drug_targets_pre=INPUT(path=$PWD+"/drug_targets")
     additional_drug_targets_pre2=SearchReplace(file=additional_drug_targets_pre,key00="\\s",value00="\n")
     additional_target_genes=CSVCleaner(original=additional_drug_targets_pre2,columnsIn="targets")
-    drugsSize=std.nRows(additional_target_genes)
+    drugSize=std.nRows(additional_target_genes)
 }else{
     additional_target_genes=StringInput(content="targets")
 }
