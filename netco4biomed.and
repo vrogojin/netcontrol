@@ -133,7 +133,7 @@ if (std.exists($PWD+"/graphml", type="file")) {
                     inputType="Gene",
                     targetDB=".GeneId",
                     unique=true)*/
-      geneConvert=CSVFilter(csv=name_ensembl_map,auxiliary=all_genes,idColumn="GeneName",matchColumn="Target Gene",includeColumns=".GeneId")
+      geneConvert=CSVFilter(csv=name_ensembl_map,auxiliary=all_genes,idColumn="GeneName",matchColumn="Target Gene",includeColumns=".GeneId,GeneName",rename="GeneName=Target Gene")
                     
                     
     EnsemblId=CSVFilter(csv=geneConvert, includeColumns=".GeneId", nonMissing=1)
