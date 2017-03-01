@@ -205,9 +205,16 @@ network_no_header = CSVCleaner(original=network, dropHeader=true, skipQuotes="*"
 
 // NetControl component
 // there can be more conditions in running NetControl, change when decided on final specification
-additional_drug_targets_pre=INPUT(path=$PWD+"/additional_drug_targets")
-additional_drug_targets_pre2=SearchReplace(file=additional_drug_targets_pre,key00="\\s",value00="\n")
-additional_target_genes=CSVCleaner(original=additional_drug_targets_pre2)
+
+
+if(std.exists($PWD+"/target_genes", type="file")){
+    additional_drug_targets_pre=INPUT(path=$PWD+"/drug_targets")
+    additional_drug_targets_pre2=SearchReplace(file=additional_drug_targets_pre,key00="\\s",value00="\n")
+    additional_target_genes=CSVCleaner(original=additional_drug_targets_pre2)
+}else{
+    additional_target_genes=StringInput(content="")
+}
+
 drugsSize=std.nRows(additional_target_genes)
 if (drugsSize>0) {
     drugable="on"
