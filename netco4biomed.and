@@ -207,7 +207,7 @@ network_no_header = CSVCleaner(original=network, dropHeader=true, skipQuotes="*"
 // there can be more conditions in running NetControl, change when decided on final specification
 
 
-if(std.exists($PWD+"/target_genes", type="file")){
+if(std.exists($PWD+"/drug_targets", type="file")){
     additional_drug_targets_pre=INPUT(path=$PWD+"/drug_targets")
     additional_drug_targets_pre2=SearchReplace(file=additional_drug_targets_pre,key00="\\s",value00="\n")
     additional_target_genes=CSVCleaner(original=additional_drug_targets_pre2)
