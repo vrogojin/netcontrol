@@ -41,6 +41,9 @@ zip_sc=INPUT(path="makezip.sh")
 // Script for coloring detail file
 color_script = INPUT(path="detail_ex.sh")
 
+// Gene name to Ensembl ID mapping
+name_ensembl_map=INPUT(path="mart_export.txt")
+
 // User input
 organism = Organism_Homo_sapiens
 
@@ -123,13 +126,14 @@ if (std.exists($PWD+"/graphml", type="file")) {
     pathway = INPUT(path=$PWD+"/graphml")
     annotationPathway = GraphAnnotator(graph = pathway)
 } else {
-    geneConvert=KorvasieniAnnotator(sourceKeys=all_genes,
+/*    geneConvert=KorvasieniAnnotator(sourceKeys=all_genes,
                     //connection=Properties,
                     indicator=true,
                     inputDB=".GeneName",
                     inputType="Gene",
                     targetDB=".GeneId",
-                    unique=true)
+                    unique=true)*/
+      geneConvert=CSVFilter(csv=name_ensembl_map,auxiliary=all_genes,idColumn="GeneName",matchColumn=".GeneName",includeColumns=".GeneId")
                     
                     
     EnsemblId=CSVFilter(csv=geneConvert, includeColumns=".GeneId", nonMissing=1)
