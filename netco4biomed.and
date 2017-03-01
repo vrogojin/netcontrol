@@ -224,7 +224,7 @@ if(std.exists($PWD+"/drug_targets", type="file")){
 if (drugable == "on") {
     drug_targets_pre = INPUT(path="Drug-Target_Approved_Proteins.txt")
     drug_targets_pre2=CSV2IDList(table1=drug_targets_pre,table2=additional_target_genes)
-    drug_targets=CSVCleaner(csv=drug_targets_pre2,dropHeader=true)
+    drug_targets=CSVCleaner(original=drug_targets_pre2,dropHeader=true)
     if (netSize>0){
 	nc_result = NetControl(graph=network_no_header, targets=fil_case_both_no_header, heuristics=heuristics_in, controllable=drug_targets)
     }
