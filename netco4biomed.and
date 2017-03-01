@@ -207,13 +207,12 @@ network_no_header = CSVCleaner(original=network, dropHeader=true, skipQuotes="*"
 // there can be more conditions in running NetControl, change when decided on final specification
 
 
+drugSize=0
 if(std.exists($PWD+"/drug_targets", type="file")){
     additional_drug_targets_pre=INPUT(path=$PWD+"/drug_targets")
     additional_drug_targets_pre2=SearchReplace(file=additional_drug_targets_pre,key00="\\s",value00="\n")
     additional_target_genes=CSVCleaner(original=additional_drug_targets_pre2,columnsIn="targets")
     drugsSize=std.nRows(additional_target_genes)
-    if (drugsSize>0) {
-	drugable="on"
     }
 }else{
     additional_target_genes=StringInput(content="targets")
@@ -223,15 +222,29 @@ if(std.exists($PWD+"/drug_targets", type="file")){
 
 if (drugable == "on") {
     drug_targets_pre = INPUT(path="Drug-Target_Approved_Proteins.txt")
-    drug_targets_pre2=CSV2IDList(table1=drug_targets_pre,table2=additional_target_genes)
+    if(drugSize>0){
+	drug_targets_pre2=CSV2IDList(table1=drug_targets_pre,table2=additional_target_genes)
+    }
+    else{
+	drug_targets_pre2=CSV2IDList(table1=drug_targets_pre)
+    }
     drug_targets=CSVCleaner(original=drug_targets_pre2,dropHeader=true)
     if (netSize>0){
-	nc_result = NetControl(graph=network_no_header, targets=fil_case_both_no_header, heuristics=heuristics_in, controllable=drug_targets)
+        nc_result = NetControl(graph=network_no_header, targets=fil_case_both_no_header, heuristics=heuristics_in, controllable=drug_targets)
     }
 }
 else {
-    if (netSize>0){
-	nc_result = NetControl(graph=network_no_header, targets=fil_case_both_no_header, heuristics=heuristics_in)
+    if(drugSize>0){
+	drug_targets_pre2=CSV2IDList(table1=additional_target_genes)
+	drug_targets=CSVCleaner(original=drug_targets_pre2,dropHeader=true)
+	if (netSize>0){
+	    nc_result = NetControl(graph=network_no_header, targets=fil_case_both_no_header, heuristics=heuristics_in, controllable=drug_targets)
+        }
+    }
+    else{
+	if (netSize>0){
+	    nc_result = NetControl(graph=network_no_header, targets=fil_case_both_no_header, heuristics=heuristics_in)
+        }
     }
 }
 
