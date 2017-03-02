@@ -2,7 +2,7 @@
 
 echo	$SESSION_ID >> ../../sessions.txt
 
-cat ../../result_page_template_header.html | sed -i "s/###/$SESSION_ID/g" > result.html
+cat ../../result_page_template_header.html | sed "s/###/$SESSION_ID/g" > result.html
 echo "<em>SESSION: $SESSION_ID<br/>" >> result.html
 echo "Please wait!</br>" >> result.html
 echo "<img src=\"https://upload.wikimedia.org/wikipedia/commons/3/3a/Gray_circles_rotate.gif\" width=\"48px\" height=\"47px\"><br>" >> result.html
