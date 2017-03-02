@@ -24,7 +24,7 @@ touch result.html
 #   tar -czf /home/vrogojin/biomedicum/FBL-paper-exec_$( date '+%Y_%m_%d' ).tar.gz $EXEC_DIR
 
 cp log_netco4biomed/_global pipeline.log
-cat ../../result_page_template_header2.html > result.html
+cat ../../result_page_template_header.html | sed -i "s/###/$SESSION_ID/g" | sed -i "s/<meta http-Equiv=\"Refresh\" Content=\"5\">//g" > result.html
 echo "<pre>" >> result.html
 if [ -s res ]
 then
@@ -35,7 +35,7 @@ else
     echo "</samp>" >> result.html
 fi
 echo "</pre>" >> result.html
-echo "SESSION: $SESSION_ID<br/>"
+echo "<em>SESSION: $SESSION_ID</em><br/>" >> result.html
 echo "<ul>" >> result.html
 echo "<li><a href='result/network.pdf'>Network layout</a></li>" >> result.html
 echo "<li><a href='result/network.graphml'>Network XML</a></li>" >> result.html
