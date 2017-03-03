@@ -265,7 +265,7 @@ if(netSize==0){
 
     message=StringInput(content="<em><font color=green>Status: OK</font></em><br><font color=red>"+missedGenes+"</font>")
 
-    nc_result_details=BashEvaluate(script="tail -n +2 @var1@", var1=ns_result.details)
+    nc_result_details=BashEvaluate(script="tail -n +2 @var1@", var1=nc_result.details)
 
     // Filtering the output of NetControl component to make it suitable for creating a graph 
     nc_result_split = TextFileSplitter(file=nc_result.count,
