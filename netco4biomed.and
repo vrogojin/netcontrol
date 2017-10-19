@@ -66,7 +66,7 @@ if(std.exists($PWD+"/network", type="file")){
     listGenes_header = CSVCleaner(original=listGenes.optOut1, columnsIn="Target Gene")
 }else{
     listGenes=StringInput(content="")
-    listGenes_header=listGenes
+    listGenes_header=StringInput(content="Target Gene\nnone")
 }
 
 
