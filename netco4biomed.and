@@ -63,11 +63,12 @@ if(std.exists($PWD+"/network", type="file")){
     listGenes_pre2=SearchReplace(file=listGenes_pre,key00="\\s",value00="\n")
     listGenes=BashEvaluate(var1=listGenes_pre2,var2=target_genes,script="cat @var1@ > @optOut1@; echo '\n' >> @optOut1@; cat @var2@ >> @optOut1@")
 //    listGenes=CSVJoin(csv1=listGenes_pre,csv2=target_genes, useKeys=false)
+    listGenes_header = CSVCleaner(original=listGenes.optOut1, columnsIn="Target Gene")
 }else{
     listGenes=StringInput(content="")
+    listGenes_header=listGenes
 }
 
-listGenes_header = CSVCleaner(original=listGenes.optOut1, columnsIn="Target Gene")
 
 
 //check_cancer_include = BashEvaluate(script="touch "+$PWD+"/cancer_checkbox")
