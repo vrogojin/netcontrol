@@ -17,14 +17,14 @@ echo "</iframe><br/>" >> result.html
 echo "<a href=\"session_control.php\" target=\"frame\">PIPELINE EMERGENCY STOP</a> (WARNING! Emergency stop cannot be reverted. All current progress will be lost!)<br/>" >> result.html
 if [ -e "network.graphml" ]
 then
-    echo "<a href=\"network.graphml\" target=\"_new\">NETWORK.GRAPHML</a><br/>" >> result.html
+    echo "<a href=\"network.graphml\" target=\"_new\">NETWORK IN GRAPHML FORMAT DOWNLOAD</a><br/>" >> result.html
 fi
 if [ -e "network.pdf" ]
 then
-    echo "<a href=\"network.pdf\" target=\"_new\">NETWORK.PDF</a><br/>" >> result.html
+    echo "<a href=\"network.pdf\" target=\"_new\">NETWORK AS IMAGE</a><br/>" >> result.html
 fi
 if [ -e "network.txt" ]
 then
-    echo "<a href=\"network.txt\" target=\"_new\">NETWORK.TXT</a><br/>" >> result.html
+    echo "<a href=\"network.txt\" target=\"_new\">NETWORK AS LIST OF EDGES</a><br/>" >> result.html
 fi
 cat ../../result_page_template_footer.html >> result.html
