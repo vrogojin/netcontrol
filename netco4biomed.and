@@ -125,13 +125,13 @@ drugable = std.strReplace(drugable_file, " ", "")
 
 missedGenes=""
 
-skipped_net_gen=0
+skip_net_gen=0
 
 if (std.exists($PWD+"/graphml", type="file")) {
     pathway = INPUT(path=$PWD+"/graphml")
     annotationPathway = GraphAnnotator(graph = pathway)
     checkpoint_12=BashEvaluate(script="echo done-1- > ../../progress.txt; echo skip-2- >> ../../progress.txt; echo exec-3- >> ../../progress.txt",failOnErr=false,@bind=annotationPathway)
-    skipped_net_gen=1
+    skip_net_gen=1
 } else {
     
 /*    geneConvert=KorvasieniAnnotator(sourceKeys=all_genes,
@@ -192,7 +192,7 @@ if (std.exists($PWD+"/graphml", type="file")) {
 
     graphml_pdf = LatexPDF(document=vis_graphml)
 
-    pdf_output = BashEvaluate(script="cp @var1@ ../../network.pdf",var1=graphml_pdf.pdf,failOnErr=false)
+    pdf_output = BashEvaluate(script="cp @var1@ ../../network.pdf",var1=graphml_pdf.document,failOnErr=false)
 
     checkpoint_2=BashEvaluate(script="echo done-1- > ../../progress.txt; echo done-2- >> ../../progress.txt; echo exec-3- >> ../../progress.txt",failOnErr=false,@bind=annotationPathway)
 }
