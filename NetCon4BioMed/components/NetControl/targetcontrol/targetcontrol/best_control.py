@@ -75,10 +75,29 @@ import time
 import shutil
 import argparse
 import anduril
+import json
+import core.RemoteException
 from anduril.args import *
 from os import path
+from time import gmtime, strftime, sleep
+from multiprocessing import Pool
+from collections import defaultdict
+
+
+def target_control_helper(args):
+    par=eval(args['kwds'])
+#    par = args['kwds']
+#    print "PACKED KWDS: ",args['kwds']
+#    print "UNPACKED: ",par
+    par['heuristics'] = par['heuristics'][0]
+    return target_control(args['V'], args['E'], args['targets'], controllable=args['controllable'], **par)
+#    return 'HELLO!'
+
 
 if __name__ == "__main__" :
+    ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print ts,": STARTING NET CONTROL CORE ALGORITHM..."
+    sys.stdout.flush()
     cf = anduril.CommandFile.from_file(sys.argv[1])
     g_filename = cf.get_input('graph')
     t_filename = cf.get_input('targets')
@@ -94,10 +113,20 @@ if __name__ == "__main__" :
     ref_extra = None
     ref_all = None
     
-    print trials
-        
+    ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print ts,": I WILL RUN ",trials," TRIALS"
+    print ts,": LOADING ",g_filename," ..."
+    sys.stdout.flush()    
+
     V, E = load_graph(g_filename, header = None, sep = "\t")
+    ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print ts,": ",g_filename," LOADED"
+    print ts,": LOADING ",t_filename," ..."
+    sys.stdout.flush()
     targets = load_targets(t_filename, sep = None)
+    ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print ts,": ",t_filename," LOADED"
+    sys.stdout.flush()
     tmpdir = tempfile.mkdtemp()
     opt_driven = c_filename is None or argD
     opt_target = not c_filename is None or argS 
@@ -118,6 +147,7 @@ if __name__ == "__main__" :
         controllable = load_targets(c_filename, sep = None)
     print "{} nodes, {} edges, {} targets, {} controllable, at least {} extra".format(
             len(V), len(E), len(targets), len(controllable), min_extra_driven(V, E, targets, controllable))
+    sys.stdout.flush()
     try:
         best_all = {ref_extra: None} if ref_extra is not None else {}
         best_extra = {ref_all: None} if ref_all is not None else {}
@@ -127,11 +157,80 @@ if __name__ == "__main__" :
         times_found = {}
         while True:
             cnt = cnt + 1
+	    ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+	    print ts,": RUNNING TRIAL: ",cnt
+	    sys.stdout.flush()
             if cnt>trials or cnt - last_update > convergence:
                 break
-            for par in params:
+	    pool = Pool()
+	    proc_num = 0
+	    procs = [None]*len(params)
+	    for par in params:
+		ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+		print ts,": CALLING TARGET_CONTROL PROCESS ",proc_num," FOR PARAM: ",par
+		sys.stdout.flush()
+#		args = {'V': V, 'E': E, 'targets': targets, 'heuristics': None, 'controllable': [], 'repeat': 1, 'cut_to_driven': True, 'cut_non_branching': False, 'verbose': False, 'test': False, 'kwds': par}
+		par_s = str(par)
+#		print "STR: ",par_s
+		args = {'V': V, 'E': E, 'targets': targets, 'controllable': controllable, 'repeat': 1, 'cut_to_driven': True, 'cut_non_branching': False, 'verbose': False, 'test': False, 'kwds': par_s}
+#		procs[proc_num] = pool.apply_async(target_control, args=(V, E, targets), kwds=par)
+#		procs[proc_num] = pool.apply_async(sleep, args=(30,), **par)
+		procs[proc_num] = pool.apply_async(target_control_helper, args=(args,))
+#		res = target_control(V, E, targets, controllable=controllable, **par)
+#		res = target_control(args['V'], args['E'], args['targets'], controllable=args['controllable'], **par)
+#		res = target_control_helper(args)
+		ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+		print ts,": PROCESS: ",proc_num," STARTED"
+		sys.stdout.flush()
+		proc_num = proc_num + 1
+	    ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+	    print ts,": WAITING FOR PROCESSES TO TERMINATE ..."
+	    sys.stdout.flush()
+	    alive = proc_num
+	    not_reported = [True]*len(params)
+	    proc_num = 0
+#	    for p in procs:
+#		proc_num = proc_num + 1
+#		not_reported[proc_num] = True
+#		
+	    while alive > 0:
+		proc_num = 0
+		for p in procs:
+		    if not p.ready():
+			proc_num = proc_num + 1
+		if alive > proc_num:
+		    alive = 0
+		    proc_num = 0
+		    for p in procs:
+			if not p.ready():
+			    alive = alive + 1
+			else:
+			    if not_reported[proc_num]:
+				ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+				print ts,": PROCESS ",proc_num," TERMINATED"
+				res = p.get()
+#				p.get()
+				print ts,": RESULT: ",res
+				sys.stdout.flush()
+				not_reported[proc_num] = False
+			proc_num = proc_num + 1
+#		    alive = proc_num
+		    sleep(0.05)
+	    ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+	    print ts,": ALL PROCESSES TERMINATED. COLLECTING RESULTS ... "
+	    sys.stdout.flush()
+	    proc_num = 0
+            for p in procs:
                 better_D = better_S = False
-                res = target_control(V, E, targets, controllable=controllable, **par)
+		ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+		print ts,": PROCESS ",proc_num,":"
+		sys.stdout.flush()
+#                res = target_control(V, E, targets, controllable=controllable, **par)
+		res = p.get(timeout=10)
+#		ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+#		print ts,": RESULT: ",res
+#		sys.stdout.flush()
+		proc_num = proc_num + 1
                 count_all = len(res["driven"])
                 count_extra = len(set(res["driven"]) - set(controllable))
                 count_target = sum([len(res["controlled"][t]) for t in res["controlled"] if t in controllable])
@@ -147,11 +246,14 @@ if __name__ == "__main__" :
                         best["S"] = count_target
                         better_S=True
                 better = better_D or better_S
-
+		ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
                 if not better:
+		    print ts,": NOT IMPROVED"
+		    sys.stdout.flush()
                     continue
                 else:
-                    print count_all, count_target
+                    print ts," IMPROVED: ",count_all, count_target
+		    sys.stdout.flush()
                     suffix = ""
                     last_update = cnt
 
@@ -173,6 +275,9 @@ if __name__ == "__main__" :
     except KeyboardInterrupt:
         sys.exit(0)
 
+    ts = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print ts,": I AM DONE. TERMINATING..."
+    sys.stdout.flush()
     # write output files here
     shutil.make_archive(path.join(tmpdir, "full_solutions"), "zip", tmpdir)
     shutil.copy(path.join(tmpdir, "full_solutions.zip"), full_output)
