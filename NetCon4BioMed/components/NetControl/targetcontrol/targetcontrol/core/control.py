@@ -8,7 +8,7 @@ from matching import max_matching
 from matrix import is_controllable
 from heuristics import get_heuristics
 
-
+import RemoteException
 
 
 #=======
@@ -380,6 +380,7 @@ class TCInfo :
 		def compute_maximal(mlist) :
 			ret_matchings = []
 			ret_hs = []
+#			print "mlist: ",mlist
 			for (ms, hs) in mlist :
 				new_matchings, new_hs = compute_maximum(ms, hs)
 				ret_matchings.extend(new_matchings)
@@ -439,6 +440,7 @@ class TCInfo :
 # - 'cycles' = set of driven nodes that close cycles
 # - 'control' = list of targets controlled by each driven node (dictionary)
 #@profile
+@RemoteException.showError
 def target_control(V, E, targets, heuristics = None, controllable = [], repeat = 1, cut_to_driven = True, cut_non_branching = False, verbose = False, test = False, **kwd) :
 	# count the nodes removed by the cut_paths optimization
 	# will report this number in the verbose version
