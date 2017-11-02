@@ -18,7 +18,20 @@ mkdir result
 touch result.zip
 touch result.html
 
-../../netco4biomed.and
+ssh -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' frontend "mkdir -p $SERVER_DIR/" &&
+
+../../netco4biomed.and &
+ID=$!
+
+running = 1
+while [ $running -eq 1 ]
+do
+    
+    if grep -q 'Log closed' log_netco4biomed/_global; then
+	running = 0
+    fi
+    sleep 5
+done
 
 #   anduril run -d $EXEC_DIR -b $MOKSISKAAN_HOME/pipeline -b $ANDURIL_HOME/sequencing -b $ANDURIL_HOME/beta -threads 8 $VR_PIPELINES_HOME/get_data_for_ieee_paper.and $1 $2 $3 $4 $5 $6
 #   tar -czf /home/vrogojin/biomedicum/FBL-paper-exec_$( date '+%Y_%m_%d' ).tar.gz $EXEC_DIR

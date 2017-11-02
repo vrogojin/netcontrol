@@ -10,6 +10,8 @@ reexecute="changed"
 
 // Init
 
+checkpoint_init=BashEvaluate(script="echo exec-1- > ../../progress.txt",failOnErr=false)
+
 moksiskaanInit = MoksiskaanInit()
 include moksiskaanPipelines+"/Studies.and"
 
@@ -123,10 +125,15 @@ drugable = std.strReplace(drugable_file, " ", "")
 
 missedGenes=""
 
+skipped_net_gen=0
+
 if (std.exists($PWD+"/graphml", type="file")) {
     pathway = INPUT(path=$PWD+"/graphml")
     annotationPathway = GraphAnnotator(graph = pathway)
+    checkpoint_12=BashEvaluate(script="echo done-1- > ../../progress.txt; echo skip-2- >> ../../progress.txt; echo exec-3- >> ../../progress.txt",failOnErr=false,@bind=annotationPathway)
+    skipped_net_gen=1
 } else {
+    
 /*    geneConvert=KorvasieniAnnotator(sourceKeys=all_genes,
                     //connection=Properties,
                     indicator=true,
@@ -162,7 +169,7 @@ if (std.exists($PWD+"/graphml", type="file")) {
 
 //    FilEnsemblId=SearchReplace(file=all_genes,key00="Target Gene",value00=xrefCol)
 
-
+    checkpoint_1=BashEvaluate(script="echo done-1- > ../../progress.txt; echo exec-2- >> ../../progress.txt",failOnErr=false,@bind=FilEnsemblId)
       
     pathway = CandidatePathway(hits = FilEnsemblId,
 				linkTypes = linkTypes,
@@ -177,7 +184,17 @@ if (std.exists($PWD+"/graphml", type="file")) {
 				@execute=reexecute
 				)
 
+    graphml_output = BashEvaluate(script="cp @var1@ ../../network.graphml",var1=pathway.graph,failOnErr=false)
+
     annotationPathway = GraphAnnotator(graph = pathway.graph)
+
+    vis_graphml = GraphVisualizer(graph=pathway.graph)
+
+    graphml_pdf = LatexPDF(document=vis_graphml)
+
+    pdf_output = BashEvaluate(script="cp @var1@ ../../network.pdf",var1=graphml_pdf.pdf,failOnErr=false)
+
+    checkpoint_2=BashEvaluate(script="echo done-1- > ../../progress.txt; echo done-2- >> ../../progress.txt; echo exec-3- >> ../../progress.txt",failOnErr=false,@bind=annotationPathway)
 }
 
 
@@ -203,6 +220,8 @@ fil_case_both_no_header = CSVCleaner(original=fil_case_both, dropHeader=true, sk
 
 network_no_header = CSVCleaner(original=network, dropHeader=true, skipQuotes="*")
 
+net_output = BashEvaluate(script="cp @var1@ ../../network.txt",var1=network_no_header,failOnErr=false)
+
 
 // NetControl component
 // there can be more conditions in running NetControl, change when decided on final specification
@@ -218,7 +237,12 @@ if(std.exists($PWD+"/drug_targets", type="file")){
     additional_target_genes=StringInput(content="targets")
 }
 
-
+if (skip_net_gen == 1)
+{
+    checkpoint_3=BashEvaluate(script="echo done-1- > ../../progress.txt; echo skip-2- >> ../../progress.txt; echo done-3- >> ../../progress.txt; echo exec-4- >> ../../progress.txt",failOnErr=false,@bind=network_no_header)
+}else{
+    checkpoint_3=BashEvaluate(script="echo done-1- > ../../progress.txt; echo done-2- >> ../../progress.txt; echo done-3- >> ../../progress.txt; echo exec-4- >> ../../progress.txt",failOnErr=false,@bind=network_no_header)
+}
 
 if (drugable == "on") {
     drug_targets_pre = INPUT(path="Drug-Target_Approved_Proteins.txt")
@@ -251,6 +275,9 @@ else {
 if(netSize==0){
     // Creating the result zip file
 
+    checkpoint_5=BashEvaluate(script="echo done-1- > ../../progress.txt; echo fail-2- >> ../../progress.txt; echo fail-3- >> ../../progress.txt; echo fail-4- >> ../../progress.txt; echo exec-5- >> ../../progress.txt",failOnErr=false,@bind=network)
+
+
     message=StringInput(content="<em><font color=red>Not enough data to build the network</font></em><br><font color=red>"+missedGenes+"</font>")
 
     cp_zip = BashEvaluate(script=zip_sc,var6=message,failOnErr=false)
@@ -261,8 +288,16 @@ if(netSize==0){
 
     OUTPUT(cp_zip.optOut1)
 
-    
+    checkpoint_6=BashEvaluate(script="echo done-1- > ../../progress.txt; echo fail-2- >> ../../progress.txt; echo fail-3- >> ../../progress.txt; echo fail-4- >> ../../progress.txt; echo done-5- >> ../../progress.txt",failOnErr=false,@bind=cp_output)
+
 }else{
+
+    if (skip_net_gen == 1)
+    {
+	checkpoint_5=BashEvaluate(script="echo done-1- > ../../progress.txt; echo skip-2- >> ../../progress.txt; echo done-3- >> ../../progress.txt; echo done-4- >> ../../progress.txt; echo exec-5- >> ../../progress.txt",failOnErr=false,@bind=nc_result)
+    }else{
+	checkpoint_5=BashEvaluate(script="echo done-1- > ../../progress.txt; echo done-2- >> ../../progress.txt; echo done-3- >> ../../progress.txt; echo done-4- >> ../../progress.txt; echo exec-5- >> ../../progress.txt",failOnErr=false,@bind=nc_result)
+    }
 
     message=StringInput(content="<em><font color=green>Status: OK</font></em><br><font color=red>"+missedGenes+"</font>")
 
@@ -350,4 +385,11 @@ if(netSize==0){
     OUTPUT(nc_result_split.array["1"])
     OUTPUT(nc_extra)
     OUTPUT(nc_result.detail)
+
+    if (skip_net_gen == 1)
+    {
+	checkpoint_6=BashEvaluate(script="echo done-1- > ../../progress.txt; echo skip-2- >> ../../progress.txt; echo done-3- >> ../../progress.txt; echo done-4- >> ../../progress.txt; echo done-5- >> ../../progress.txt",failOnErr=false,@bind=cp_output)
+    }else{
+	checkpoint_6=BashEvaluate(script="echo done-1- > ../../progress.txt; echo done-2- >> ../../progress.txt; echo done-3- >> ../../progress.txt; echo done-4- >> ../../progress.txt; echo done-5- >> ../../progress.txt",failOnErr=false,@bind=cp_output)
+    }
 }
