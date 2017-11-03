@@ -23,9 +23,35 @@ ssh -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/n
 ../../netco4biomed.and &
 ID=$!
 
+echo "<html>" > pipeline.log.html
+echo "<body>" >> pipeline.log.html
+echo "<pre>" >> pipeline.log.html
+echo "INITIALIZING..." >> pipeline.log.html
+echo "</pre>" >> pipeline.log.html
+echo "<a name=\"end\">&nbsp;</a>" >> pipeline.log.html
+echo "</body>" >> pipeline.log.html
+echo "</html>" >> pipeline.log.html
+
+status="PIPELINE RUNNING..."
+../../generate_result_page.sh
+sed -i "s/___STATUS___/$status/g" result.html
+scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' pipeline.log.html result.html frontend:$SERVER_DIR
+
 running=1
 while [ $running -eq 1 ]; do
     sleep 5
+    cp log_netco4biomed/_global pipeline.log
+    echo "<html>" > pipeline.log.html
+    echo "<body>" >> pipeline.log.html
+    echo "<pre>" >> pipeline.log.html
+    cat pipeline.log >> pipeline.log.html
+    echo "</pre>" >> pipeline.log.html
+    echo "<a name=\"end\">&nbsp;</a>" >> pipeline.log.html
+    echo "</body>" >> pipeline.log.html
+    echo "</html>" >> pipeline.log.html
+    ../../generate_result_page.sh
+    sed -i "s/___STATUS___/$status/g" result.html
+    scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' pipeline.log.html pipeline.log result.html frontend:$SERVER_DIR
     if grep -q 'Log closed' log_netco4biomed/_global; then
 	running=0
     fi
@@ -35,29 +61,16 @@ done
 #   tar -czf /home/vrogojin/biomedicum/FBL-paper-exec_$( date '+%Y_%m_%d' ).tar.gz $EXEC_DIR
 
 cp log_netco4biomed/_global pipeline.log
-cat ../../result_page_template_header.html | sed "s/###/$SESSION_ID/g" | sed "s/<meta http-Equiv=\"Refresh\" Content=\"5\">//g" > result.html
-echo "<pre>" >> result.html
+#cat ../../result_page_template_header.html | sed "s/###/$SESSION_ID/g" | sed "s/<meta http-Equiv=\"Refresh\" Content=\"5\">//g" > result.html
+sed -i 's/Refresh/---/g' result.html
+
 if [ -s res ]
 then
-    cat res >> result.html
+    status="PIPELINE TERMINATRED. STATUS OK"
 else
-    echo "<em><font color=red>THE PIPELINE EXECUTION FAILED!!!</font></em><samp>" >> result.html
-    cat pipeline.log >> result.html
-    echo "</samp>" >> result.html
+    status="PIPELINE FAILED. CHECK THE LOG"
 fi
-echo "</pre>" >> result.html
-echo "<em>SESSION: $SESSION_ID</em><br/>" >> result.html
-echo "<ul>" >> result.html
-echo "<li><a href='result/network.pdf'>Network layout</a></li>" >> result.html
-echo "<li><a href='result/network.graphml'>Network XML</a></li>" >> result.html
-echo "<li><a href='result/driven.csv'>List of driven nodes serving as drug targets</a></li>" >> result.html
-echo "<li><a href='result/extra.csv'>All other driven nodes</a></li>" >> result.html
-echo "<li><a href='result/details.txt'>Detailed report on structuran network controllability analysis</a></li>" >> result.html
-echo "<li><a href='result.zip'>ZIP archive</a></li>" >> result.html
-echo "<hr>" >> result.html
-echo "<li><a href='pipeline.log'>Pipeline LOG</a></li>" >> result.html
-echo "</ul>" >> result.html
-cat ../../result_page_template_footer.html >> result.html
+sed -i "s/___STATUS___/$status/g" result.html
 
 ssh -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' frontend "mkdir -p $SERVER_DIR/" &&
 scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' -r result result.zip result.html pipeline.log frontend:$SERVER_DIR
