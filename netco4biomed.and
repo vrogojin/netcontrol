@@ -188,11 +188,12 @@ if (std.exists($PWD+"/graphml", type="file")) {
 
     annotationPathway = GraphAnnotator(graph = pathway.graph)
 
-    vis_graphml = GraphVisualizer(graph=pathway.graph)
+//    vis_graphml = GraphVisualizer(graph=pathway.graph)
 
-    graphml_pdf = LatexPDF(document=vis_graphml)
+//    graphml_pdf = LatexPDF(document=vis_graphml)
 
-    pdf_output = BashEvaluate(script="cp @var1@ ../../network.pdf",var1=graphml_pdf.document,failOnErr=false)
+//    pdf_output = BashEvaluate(script="cp @var1@ ../../network.pdf",var1=graphml_pdf.document,failOnErr=false)
+    vis_graph_gen = BashEvaluate(script="cd ../../; ../../vis_graphml.and &",failOnErr=false,@bind=graphml_output)
 
     checkpoint_2=BashEvaluate(script="echo done-1- > ../../progress.txt; echo done-2- >> ../../progress.txt; echo exec-3- >> ../../progress.txt",failOnErr=false,@bind=annotationPathway)
 }

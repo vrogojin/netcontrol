@@ -1,0 +1,21 @@
+## This file includes the faster simple heuristics, together with versions of them accounting for the controllable (i.e. drug-targetable) nodes.
+##
+## Simple, fast heuristics -> see 'simple_fast.txt' for details.
+#T F 1 (->A)(->T)
+#T F 1 (->D)(->CA)(->PA)(->N)(->T)
+#T F 1 (->@CA)(->@PA)(->D)(->CA)(->PA)(->N)(->T)
+## Favor controllable nodes and avoid cycles.
+#T F 1 (->K)(->A)(->T)
+## Consider nodes in the following way:
+## - driven, indirectly controlled or controllable predecessors of uncontrollable nodes
+## - acyclic predecessors of uncontrollable nodes
+## - remaining predecessors of uncontrollable nodes
+## - a selection of predecessors of controllable nodes (as an alternative to directly marking them driven)
+T F 1 (->#XD.#XC.#XK)(->#XA)(->#X)(->#KD.#KC)
+T F 1 (->#XD.#XC.#XK)(->#XA)(->#X)(->#KD.#KC.#KP)
+T F 1 (->#XD.#XC.#XK)(->#XA)(->#X)(->#KD.#KC.#KP.#KK)
+## Same as the above, but include in the first step already seen predecessors of uncontrollable nodes.
+T F 1 (->#XD.#XC.#XP.#XK)(->#XA)(->#X)(->#KD.#KC)
+T F 1 (->#XD.#XC.#XP.#XK)(->#XA)(->#X)(->#KD.#KC.#KP)
+T F 1 (->#XD.#XC.#XP.#XK)(->#XA)(->#X)(->#KD.#KC.#KP.#KK)
+

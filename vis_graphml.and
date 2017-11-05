@@ -1,0 +1,9 @@
+#!/usr/bin/env anduril-runner
+
+pathway_graph=INPUT(path=$PWD+"/network.graphml")
+
+vis_graphml = GraphVisualizer(graph=pathway_graph)
+
+graphml_pdf = LatexPDF(document=vis_graphml)
+
+pdf_output = BashEvaluate(script="cp @var1@ ../../network.pdf",var1=graphml_pdf.document,failOnErr=false)
