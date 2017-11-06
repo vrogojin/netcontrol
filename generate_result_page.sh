@@ -11,7 +11,7 @@ cat status.txt >> result.html
 if grep -q 'STOP' control.txt; then
     echo "<br/>PIPELINE HALTED!"
 else
-    if grep -q 'Log closed' log_netcon4biomed/_global;  then
+    if grep -q 'Log closed' log_netco4biomed/_global; then
 	echo PIPELINE TERMINATED. OK
     else
 	echo "<a href=\"session_control.php\"> (!!!PIPELINE EMERGENCY STOP!!!)</a> <br/>(WARNING! Emergency stop cannot be reverted. All current progress will be lost!)<br/>" >> result.html

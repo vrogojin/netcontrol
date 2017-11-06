@@ -2,7 +2,10 @@
 
 mkdir result
 
-cp @var1@ result/visual.pdf
+if [ -e @var1@ ]
+then
+    cp @var1@ result/visual.pdf
+fi
 cp @var2@ result/
 cp @var3@ result/driven.csv
 cp @var4@ result/extra.csv

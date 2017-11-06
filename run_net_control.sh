@@ -62,6 +62,22 @@ while [ $running -eq 1 ]; do
     then
 	scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' network.txt frontend:$SERVER_DIR/result
     fi
+    if [ -e "result/details.txt" ]
+    then
+	scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' result/details.txt frontend:$SERVER_DIR/result
+    fi
+    if [ -e "result/driven.csv" ]
+    then
+	scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' result/driven.csv frontend:$SERVER_DIR/result
+    fi
+    if [ -e "result/extra.csv" ]
+    then
+	scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' result/extra.csv frontend:$SERVER_DIR/result
+    fi
+    if [ -e "result/network.graphml" ]
+    then
+	scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' result/network.graphml frontend:$SERVER_DIR/result
+    fi
     if [ -e "result.zip" ]
     then
 	scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' result.zip frontend:$SERVER_DIR

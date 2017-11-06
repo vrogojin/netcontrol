@@ -35,7 +35,7 @@ linkTypes =  //LinkType_pathway_precedence+","+
             LinkType_methylation
 
 // We provide heuristics
-heuristics_in = INPUT(path="controllable.txt")
+//heuristics_in = INPUT(path="controllable.txt")
 
 // Script tha creates the zip file
 zip_sc=INPUT(path="makezip.sh")
@@ -249,9 +249,11 @@ if (drugable == "on") {
     drug_targets_pre = INPUT(path="Drug-Target_Approved_Proteins.txt")
     if(drugSize>0){
 	drug_targets_pre2=CSV2IDList(table1=drug_targets_pre,table2=additional_target_genes)
+	heuristics_in=INPUT(path="drug_targets_heuristics.txt")
     }
     else{
 	drug_targets_pre2=CSV2IDList(table1=drug_targets_pre)
+	heuristics_in=INPUT(path="simple_fast.txt")
     }
     drug_targets=CSVCleaner(original=drug_targets_pre2,dropHeader=true,skipQuotes="*")
     if (netSize>0){
@@ -262,11 +264,13 @@ else {
     if(drugSize>0){
 	drug_targets_pre2=CSV2IDList(table1=additional_target_genes)
 	drug_targets=CSVCleaner(original=drug_targets_pre2,dropHeader=true,skipQuotes="*")
+	heuristics_in=INPUT(path="drug_targets_heuristics.txt")
 	if (netSize>0){
 	    nc_result = NetControl(graph=network_no_header, targets=fil_case_both_no_header, heuristics=heuristics_in, controllable=drug_targets)
         }
     }
     else{
+	heuristics_in=INPUT(path="simple_fast.txt")
 	if (netSize>0){
 	    nc_result = NetControl(graph=network_no_header, targets=fil_case_both_no_header, heuristics=heuristics_in)
         }
@@ -304,12 +308,23 @@ if(netSize==0){
 
     nc_result_details=BashEvaluate(script="tail -n +3 @var1@", var1=nc_result.detail)
 
+    cp_output_nc_result_details = BashEvaluate(script="cp @var6@ ../../result/details.txt; ",
+		var6=nc_result_details.stdOut,failOnErr=false)
+    
+
     // Filtering the output of NetControl component to make it suitable for creating a graph 
     nc_result_split = TextFileSplitter(file=nc_result.count,
                  splitRegexp=".*\\bExtra\\b.*")
                  
+
+    cp_output_nc_result_split = BashEvaluate(script="cp @var4@ ../../result/driven.csv;",
+		var4=nc_result_split.array["1"],failOnErr=false)
+    
     nc_extra = CSVCleaner(original=nc_result_split.array["2"], dropHeader=true)
 
+    cp_output_nc_extra = BashEvaluate(script="cp @var5@ ../../result/extra.csv;",
+		var5=nc_extra, failOnErr=false)
+    
     nc_extra_clean = CSVCleaner(original=nc_extra, rename="Extra=name, Targets=fillcolor")
     nc_extra_color = CSVCleaner(original=nc_extra_clean, replace="fillcolor\n([0-9])\n#ff0000")
 
@@ -351,6 +366,13 @@ if(netSize==0){
     mok_vertex_att_clean = CSVCleaner(original=mok_vertex_att, columns="Vertex, BioentityId, EnsemblGeneId, color, fillcolor, isHit, label, penwidth, originalID", naSymbol="")
 
     mok_graph_ant_color = GraphAnnotator(graph=annotationPathway.graph, vertexAttributes=mok_vertex_att_clean)
+
+    cp_output_graphml = BashEvaluate(script="cp @var3@ ../../result/network.graphml; ",
+		var3=mok_graph_ant_color.graph,failOnErr=false)
+
+
+    cp_zip_no_pdf = BashEvaluate(script=zip_sc,var2=mok_graph_ant_color.graph, 
+			var3=nc_result_split.array["1"], var4=nc_extra, var5=nc_result_details.stdOut,failOnErr=false)
 
     mok_vis_graph = GraphVisualizer(graph=mok_graph_ant_color.graph)
 
