@@ -374,6 +374,11 @@ if(netSize==0){
     cp_zip_no_pdf = BashEvaluate(script=zip_sc,var2=mok_graph_ant_color.graph, 
 			var3=nc_result_split.array["1"], var4=nc_extra, var5=nc_result_details.stdOut,failOnErr=false)
 
+    // Copying resulting files to the top of the $workingdir
+    cp_output_no_pdf = BashEvaluate(script="cp @var1@.zip ../../result.zip;",
+		var1=cp_zip_no_pdf.optOut1,failOnErr=false)
+    
+
     mok_vis_graph = GraphVisualizer(graph=mok_graph_ant_color.graph)
 
     mok_nc_pdf = LatexPDF(document=mok_vis_graph)
