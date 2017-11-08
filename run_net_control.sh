@@ -6,6 +6,8 @@
 
 export SESSION_ID=$(cat session_id)
 export SERVER_DIR=$(cat server_dir)
+export SERVER_URL=$(cat server_url)
+export USER_MAIL=$(cat useremail)
 
 
 export MOKSISKAAN_HOME=/opt/moksiskaan/db
@@ -22,6 +24,8 @@ ssh -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/n
 
 ../../netco4biomed.and &
 ID=$!
+
+../../notification_sender.sh postmaster@combio.abo.fi $USER_MAIL "TASK $SESSION_ID STARTED" "Hello,\\nYou have started task at NetControl4BioMed pipeline.\\nFollow the progress of the analysis at http://$SERVER_URL/$SESSION_ID/result.html" 2>&1 > mail.log
 
 echo "<html>" > pipeline.log.html
 echo "<body>" >> pipeline.log.html

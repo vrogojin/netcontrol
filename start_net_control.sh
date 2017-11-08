@@ -24,6 +24,7 @@ echo "</html>" >> session_control.php
 
 echo $SESSION_ID > session_id
 echo $SERVER_DIR > server_dir
+echo $SERVER_URL > server_url
 
 ssh -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' frontend "mkdir -p $SERVER_DIR/" &&
 scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' -r result.html session_control.php frontend:$SERVER_DIR
