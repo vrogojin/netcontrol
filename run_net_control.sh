@@ -17,6 +17,11 @@ export MOKSISKAAN_HOME=/opt/moksiskaan/db
 #export BETA_BUNDLE=/home/vrogojin/anduril-svn/trunk/beta
 source $MOKSISKAAN_HOME/pipeline/execInit.sh
 
+
+if [ -e ../../server_url ]; then
+    export SERVER_URL=$(cat ../../server_url)
+fi
+
 mkdir result
 touch result.zip
 touch result.html
