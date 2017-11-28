@@ -348,7 +348,7 @@ if(netSize==0){
     nc_extra_color_col = CSVCleaner(original=nc_extra_color, columns="name", dropHeader=true, skipQuotes="*")
 
     check_extra = std.fRead(nc_extra_color_col)
-    if (check_driver != "") {
+    if (check_extra != "") {
 	extra_sh = BashEvaluate(script=color_script,var1=nc_extra_color_col, var2=nc_result.detail)
 	extra_col = CSVCleaner(original=extra_sh.optOut2, columnsIn="name")
 	extra_join = CSVJoin(csv1=extra_col, csv2=nc_extra_color, intersection=false)
