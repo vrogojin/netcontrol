@@ -253,7 +253,7 @@ if (drugable == "on") {
     }
     else{
 	drug_targets_pre2=CSV2IDList(table1=drug_targets_pre)
-	heuristics_in=INPUT(path="simple_fast.txt")
+	heuristics_in=INPUT(path="drug_targets_heuristics.txt")
     }
     drug_targets=CSVCleaner(original=drug_targets_pre2,dropHeader=true,skipQuotes="*")
     if (netSize>0){
