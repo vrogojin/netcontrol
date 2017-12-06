@@ -168,11 +168,15 @@ echo "</pre><hr/>" >> result.html
 echo "<h3>DOWNLOAD</h3><br/>" >> result.html
 if [ -e "network.graphml" ]
 then
-    echo "<a href=\"result/network.graphml\" target=\"_new\">NETWORK IN GRAPHML FORMAT DOWNLOAD</a><br/>" >> result.html
+    echo "<a href=\"result/network.graphml\" target=\"_new\">NETWORK IN GRAPHML FORMAT</a><br/>" >> result.html
 fi
 if [ -e "network.pdf" ]
 then
-    echo "<a href=\"result/network.pdf\" target=\"_new\">NETWORK AS IMAGE</a><br/>" >> result.html
+    echo "<a href=\"result/network.pdf\" target=\"_new\">NETWORK PDF PLOT</a><br/>" >> result.html
+fi
+if [ -e "legend.pdf" ]
+then
+    echo "<a href=\"result/legend.pdf\" target=\"_new\">LEGEND OF THE NETWORK PDF PLOT</a><br/>" >> result.html
 fi
 if [ -e "network.txt" ]
 then

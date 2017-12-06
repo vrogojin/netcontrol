@@ -72,6 +72,10 @@ while [ $running -eq 1 ]; do
     then
 	scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' network.pdf frontend:$SERVER_DIR/result
     fi
+    if [ -e "legend.pdf" ]
+    then
+	scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' legend.pdf frontend:$SERVER_DIR/result
+    fi
     if [ -e "network.txt" ]
     then
 	scp -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' network.txt frontend:$SERVER_DIR/result

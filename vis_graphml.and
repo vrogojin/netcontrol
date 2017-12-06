@@ -1,9 +1,13 @@
 #!/usr/bin/env anduril-runner
 
 pathway_graph=INPUT(path=$PWD+"/network.graphml")
+pathway_legend=INPUT(path=$PWD+"/legend.graphml")
 
 vis_graphml = GraphVisualizer(graph=pathway_graph)
+vis_legend = GraphVisualizer(graph=pathway_legend)
+
 
 graphml_pdf = LatexPDF(document=vis_graphml)
+legend_pdf = LatexPDF(document=vis_legend)
 
-pdf_output = BashEvaluate(script="cp @var1@ ../../network.pdf",var1=graphml_pdf.document,failOnErr=false)
+pdf_output = BashEvaluate(script="cp @var1@ ../../network.pdf;cp @var2@ ../../legend.pdf",var1=graphml_pdf.document,var2=legend_pdf.document,failOnErr=false)

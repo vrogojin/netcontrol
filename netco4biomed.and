@@ -24,8 +24,8 @@ linkTypes =  //LinkType_pathway_precedence+","+
             LinkType_protein_activation+","+
             LinkType_protein_inhibition+","+
             LinkType_protein_state_change+","+
-            LinkType_protein_binding+","+
-            LinkType_protein_dissociation+","+
+            //LinkType_protein_binding+","+
+            //LinkType_protein_dissociation+","+
             LinkType_gene_expression+","+
             LinkType_gene_repression+","+
             LinkType_phosphorylation+","+
@@ -184,7 +184,7 @@ if (std.exists($PWD+"/graphml", type="file")) {
 				@execute=reexecute
 				)
 
-    graphml_output = BashEvaluate(script="cp @var1@ ../../network.graphml",var1=pathway.graph,failOnErr=false)
+    graphml_output = BashEvaluate(script="cp @var1@ ../../network.graphml;cp @var2@ ../../legend.graphml",var1=pathway.graph,var2=pathway.legend,failOnErr=false)
 
     annotationPathway = GraphAnnotator(graph = pathway.graph)
 
