@@ -336,7 +336,7 @@ if(netSize==0){
 
     check_driver = std.fRead(nc_driver_color_col)
     if (check_driver != "") {
-	driver_sh = BashEvaluate(script=color_script,var1=nc_driver_color_col, var2=nc_result.detail)
+	driver_sh = BashEvaluate(script=color_script,var1=nc_driver_color_col, var2=nc_result.detail, failOnErr=false)
 	driver_col = CSVCleaner(original=driver_sh.optOut2, columnsIn="name")
 	driver_join = CSVJoin(csv1=driver_col, csv2=nc_driver_color, intersection=false)
 	driver_join_clean = CSVCleaner(original=driver_join, naSymbol="\"#BF5FFF\"")
@@ -349,7 +349,7 @@ if(netSize==0){
 
     check_extra = std.fRead(nc_extra_color_col)
     if (check_extra != "") {
-	extra_sh = BashEvaluate(script=color_script,var1=nc_extra_color_col, var2=nc_result.detail)
+	extra_sh = BashEvaluate(script=color_script,var1=nc_extra_color_col, var2=nc_result.detail, failOnErr=false)
 	extra_col = CSVCleaner(original=extra_sh.optOut2, columnsIn="name")
 	extra_join = CSVJoin(csv1=extra_col, csv2=nc_extra_color, intersection=false)
 	extra_join_clean = CSVCleaner(original=extra_join, naSymbol="\"#FFA500\"")
